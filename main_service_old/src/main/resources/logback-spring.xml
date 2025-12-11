@@ -1,0 +1,28 @@
+<configuration>
+    <!-- Консольний апендер -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Увімкнути debug для всього проєкту -->
+    <logger name="com.language_practice_server" level="DEBUG"/>
+
+    <!-- Увімкнути debug для Spring Security -->
+    <logger name="org.springframework.security" level="DEBUG"/>
+
+    <!-- Увімкнути debug для OAuth2 клієнта -->
+    <logger name="org.springframework.security.oauth2" level="DEBUG"/>
+
+    <!-- Увімкнути debug для Hibernate
+    <logger name="org.hibernate" level="INFO"/>
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
+    <logger name="org.hibernate.type.descriptor.sql" level="TRACE"/>-->
+
+    <!-- Кореневий логер -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>
