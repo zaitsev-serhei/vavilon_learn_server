@@ -1,0 +1,32 @@
+# Dockerfile.template
+# Multi-stage build for Maven multi-module Spring Boot app
+ARG MODULE_PATH
+ARG MODULE_PORT
+
+FROM maven:3.9.4-eclipse-temurin-17 AS builder
+WORKDIR /workspace
+
+  # copy parent pom first to cache dependencies
+COPY pom.xml ./
+  # copy module pom to leverage layer caching
+COPY ${MODULE_PATH}/pom.xml ${MODULE_PATH}/pom.xml
+
+  # copy full repo
+COPY . .
+
+  # build only specified module and its dependencies
+RUN mvn -T1C -DskipTests -pl ${MODULE_PATH} -am clean package
+
+  # runtime image
+FROM eclipse-temurin:17-jre-jammy
+WORKDIR /app
+
+ARG JAR=/workspace/${MODULE_PATH}/target/*.jar
+COPY --from=builder ${JAR} app.jar
+
+ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Duser.timezone=UTC"
+
+  # Expose module port (optional — used for readability)
+EXPOSE ${MODULE_PORT}
+
+ENTRYPOINT ["sh","-c","exec java $JAVA_OPTS -jar /app/app.jar"]
