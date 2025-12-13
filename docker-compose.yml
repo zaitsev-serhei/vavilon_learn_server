@@ -103,7 +103,7 @@ services:
         MODULE_PORT: 8082
     container_name: main-service
     env_file:
-      - ./main_service_old/src/main/resources.env
+      - ./main_service_old/src/main/resources/.env
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - SERVER_PORT=8082
@@ -128,7 +128,7 @@ services:
         MODULE_PORT: 8075
     container_name: notification-service
     env_file:
-      - ./notification_service/src/main/resources.env
+      - ./notification_service/src/main/resources/.env
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - SERVER_PORT=8075

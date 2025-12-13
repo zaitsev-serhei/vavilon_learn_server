@@ -126,9 +126,9 @@
 			<artifactId>jackson-datatype-jsr310</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.vavilonLearn.contracts</groupId>
+			<groupId>com.language_practice_server.server_demo</groupId>
 			<artifactId>contracts</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>

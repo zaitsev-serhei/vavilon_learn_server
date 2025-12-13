@@ -29,7 +29,6 @@
         <spring.cloud.version>2025.0.0</spring.cloud.version>
         <logback.encoder.version>7.4</logback.encoder.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
     </properties>
     <dependencyManagement>
