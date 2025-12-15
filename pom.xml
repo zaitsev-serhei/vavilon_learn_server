@@ -6,7 +6,7 @@
     <packaging>pom</packaging>
     <groupId>com.language_practice_server.server_demo</groupId>
     <artifactId>vavilon_learn_server</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>vavilon_learn_server</name>
 
     <parent>
@@ -19,7 +19,6 @@
         <module>contracts</module>
         <module>api_gateway_service</module>
         <module>config_service</module>
-        <module>discovery_service</module>
         <module>notification_service</module>
         <module>main_service_old</module>
     </modules>
@@ -40,7 +39,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>

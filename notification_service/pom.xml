@@ -3,16 +3,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.notification_service</groupId>
 	<artifactId>notification_service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>notification_service</name>
 	<description>Notification service for Vavilon Learn</description>
 
 	<parent>
 		<groupId>com.language_practice_server.server_demo</groupId>
 		<artifactId>vavilon_learn_server</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>1.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<licenses>
@@ -52,6 +50,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-consul-discovery</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
@@ -117,8 +119,7 @@
 				<executions>
 					<execution>
 						<goals>
-							<goal>build-info</goal> <!-- генерує інформацію про версію -->
-							<goal>repackage</goal> <!-- створює runnable jar -->
+							<goal>repackage</goal>
 						</goals>
 					</execution>
 				</executions>

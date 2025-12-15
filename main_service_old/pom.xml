@@ -6,13 +6,12 @@
 	<parent>
 		<groupId>com.language_practice_server.server_demo</groupId>
 		<artifactId>vavilon_learn_server</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>1.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<groupId>com.language_practice_server</groupId>
 	<artifactId>vavilon_learn</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>Vavilon Learn Server</name>
 	<description>Language Server Demo project for Spring Boot</description>
 	<url/>
@@ -66,6 +65,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-consul-discovery</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -153,6 +156,13 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
