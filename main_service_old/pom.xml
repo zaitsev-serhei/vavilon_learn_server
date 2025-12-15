@@ -10,7 +10,6 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<groupId>com.language_practice_server</groupId>
 	<artifactId>vavilon_learn</artifactId>
 	<name>Vavilon Learn Server</name>
 	<description>Language Server Demo project for Spring Boot</description>
@@ -141,7 +140,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot</artifactId>
-			<version>3.5.7</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
