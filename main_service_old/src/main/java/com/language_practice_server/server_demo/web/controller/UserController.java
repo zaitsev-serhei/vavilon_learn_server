@@ -29,8 +29,15 @@ public class UserController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    @GetMapping("/{email}")
+    public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email){
+        return userService.findByEmail(email)
+                .map(userWebMapper::toDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto){
         var savedUser = userService.saveUser(userWebMapper.toModel(userDto));
         return ResponseEntity.ok(userWebMapper.toDto(savedUser));

@@ -9,14 +9,19 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * Main security configuration class.
@@ -29,46 +34,48 @@ import java.nio.charset.StandardCharsets;
 public class SecurityConfiguration {
     private final OAuth2AuthenticationSuccessHandler oauth2SuccessHandler;
     private final OAuth2AuthorizedClientService authorizedClientService;
-    private final JwtTokenProvider tokenProvider;
 
     public SecurityConfiguration(OAuth2AuthenticationSuccessHandler oauth2SuccessHandler,
-                                 OAuth2AuthorizedClientService authorizedClientService, JwtTokenProvider tokenProvider) {
+                                 OAuth2AuthorizedClientService authorizedClientService) {
         this.oauth2SuccessHandler = oauth2SuccessHandler;
         this.authorizedClientService = authorizedClientService;
-        this.tokenProvider = tokenProvider;
     }
 
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:5173") // або props.frontend allowed origins
-                        .allowCredentials(true)
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
-            }
-        };
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(tokenProvider);
-        http.authorizeHttpRequests(
-                (requests) -> requests
-                        .requestMatchers(HttpMethod.GET,
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/swagger-resources/**",
-                                "/webjars/**",
-                                "/favicon.ico").permitAll()
-                        .requestMatchers("/api/oauth2/**", "/api/auth/**", "/public/**", "/oauth2/**", "/login/**").permitAll()
-                        .requestMatchers("/auth/**", "/vacancies", "/about", "/forStudents", "/forTeachers", "/error").permitAll()
-                        .requestMatchers("/tasktemplate/**", "/tasks/**", "/users/**", "/persons/**").authenticated()
-        )
-                .exceptionHandling(handler -> handler.authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
-                .addFilterBefore(jwtFilter, OAuth2LoginAuthenticationFilter.class)
+        http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(
+                        (requests) -> requests
+                                .requestMatchers(HttpMethod.GET,
+                                        "/v3/api-docs/**",
+                                        "/swagger-ui/**",
+                                        "/swagger-ui.html",
+                                        "/swagger-resources/**",
+                                        "/webjars/**",
+                                        "/favicon.ico").permitAll()
+                                .requestMatchers(
+                                        "/api/oauth2/**",
+                                        "/api/auth/**",
+                                        "/oauth2/**",
+                                        "/login/**").permitAll()
+                                .requestMatchers("/internal/**").hasAuthority("SCOPE_internal")
+                                .anyRequest().denyAll()
+                )
                 .oauth2Login(oauth2 -> oauth2
                         .authorizedClientService(authorizedClientService)
                         .successHandler(oauth2SuccessHandler)
@@ -79,12 +86,17 @@ public class SecurityConfiguration {
                             res.sendRedirect(redirect);
                         })
                 )
+                .oauth2ResourceServer(oauth2 ->
+                        oauth2.jwt(jwt -> jwt
+                                .jwkSetUri("http://auth-service/.well-known/jwks.json")
+                        )
+                )
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
                 );
-
-        http.csrf(csrf -> csrf.disable());
-        http.formLogin(form -> form.disable());
         return http.build();
     }
 }

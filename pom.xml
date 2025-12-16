@@ -22,6 +22,7 @@
         <module>notification_service</module>
         <module>main_service_old</module>
         <module>user_service</module>
+        <module>auth_service</module>
     </modules>
     <properties>
         <java.version>17</java.version>
