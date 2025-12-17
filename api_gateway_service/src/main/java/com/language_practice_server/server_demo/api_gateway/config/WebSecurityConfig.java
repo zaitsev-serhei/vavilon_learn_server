@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -37,35 +38,14 @@ public class WebSecurityConfig {
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http.authorizeExchange(
                 ex -> ex
-                        .pathMatchers("/api/oauth2/**", "/oauth2/**", "/login/oauth2/**",
-                                "/.well-known/jwks.json", "/public/**", "/actuator/**")
+                        .pathMatchers("/.well-known/**", "/actuator/**")
                         .permitAll()
+                        .pathMatchers("/api/**").hasAuthority("SCOPE_USER")
+                        .pathMatchers("/internal/**").hasAuthority("SCOPE_internal")
                         .anyExchange().authenticated()
         )
-                .oauth2ResourceServer(spec -> spec.jwt(jwtSpec -> {
-                    //spring can create its own decoder
-                }));
-        // .jwt(jwt -> jwt.jwkSetUri(jwkUrl))
-
-        http.csrf(csrf -> csrf.disable());
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .oauth2ResourceServer(spec -> spec.jwt(Customizer.withDefaults()));
         return http.build();
-    }
-
-    // Optional: propagate principal headers downstream
-    @Bean
-    public WebFilter addPrincipalHeadersFilter() {
-        return (exchange, chain) -> {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if (auth != null && auth.isAuthenticated()) {
-                Map<String, Object> claims = ((Jwt) auth.getPrincipal()).getClaims();
-                if (claims.containsKey("uid")) {
-                    exchange.getRequest().mutate()
-                            .header("X-User-Id", claims.get("uid").toString())
-                            .header("X-User-Roles", claims.getOrDefault("roles", "").toString())
-                            .build();
-                }
-            }
-            return chain.filter(exchange);
-        };
     }
 }

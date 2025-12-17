@@ -72,6 +72,7 @@ public class JwtTokenProvider {
                     //TODO: consider better option to use name/full name
                     .claim("name", user.getFirstName() + " " + user.getLastName())
                     .claim("roles", user.getRole())
+                    .claim("scope", TokenType.USER)
                     .claim("type", TokenType.USER)
                     .signWith(keyProvider.getPrivateKey(), SignatureAlgorithm.RS256)
                     .compact();
@@ -168,7 +169,7 @@ public class JwtTokenProvider {
         return parseClaims(token).map(Claims::getExpiration);
     }
 
-    public boolean isUserToken(Claims claims){
+    public boolean isUserToken(Claims claims) {
         return TokenType.USER.equals(claims.get("type"));
     }
 }
