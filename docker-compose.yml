@@ -7,7 +7,7 @@ services:
     command: agent -dev -client=0.0.0.0
     ports:
       - "8500:8500"
-    networks: [vavilon-net]
+    networks: [ vavilon-net ]
 
   # -------------------- Kafka --------------------
   kafka:
@@ -27,7 +27,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     volumes:
       - kafka-data:/var/lib/kafka/data
-    networks: [vavilon-net]
+    networks: [ vavilon-net ]
 
   # -------------------- Postgres --------------------
   postgres:
@@ -39,14 +39,15 @@ services:
       POSTGRES_PASSWORD: global_db_admin
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user_dev -d vavilon_learn_dev"]
+      test: [ "CMD-SHELL", "pg_isready -U db_admin -d vavilon_learn_db" ]
       interval: 5s
       timeout: 5s
       retries: 10
-    networks: [vavilon-net]
+    networks: [ vavilon-net ]
 
   # -------------------- Config Service --------------------
   config-service:
@@ -66,7 +67,7 @@ services:
       - "8888:8888"
     depends_on:
       - consul
-    networks: [vavilon-net]
+    networks: [ vavilon-net ]
 
   # -------------------- API Gateway --------------------
   api-gateway:
@@ -87,7 +88,7 @@ services:
     depends_on:
       - consul
       - config-service
-    networks: [vavilon-net]
+    networks: [ vavilon-net ]
 
   # -------------------- Main Service --------------------
   main-service:
@@ -106,9 +107,9 @@ services:
       SPRING_CLOUD_CONSUL_HOST: consul
       SPRING_PROFILES_ACTIVE: dev
       SERVER_PORT: 8081
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/vavilon_learn_dev
-      SPRING_DATASOURCE_USERNAME: user_dev
-      SPRING_DATASOURCE_PASSWORD: dev_pass
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/task_service_db
+      SPRING_DATASOURCE_USERNAME: task_service_admin
+      SPRING_DATASOURCE_PASSWORD: user123
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     ports:
       - "8081:8081"
@@ -116,59 +117,59 @@ services:
       - consul
       - kafka
       - postgres
-    networks: [vavilon-net]
+    networks: [ vavilon-net ]
 
   # -------------------- User Service --------------------
   user-service:
     build:
-     context: .
+      context: .
       dockerfile: Dockerfile.template
-     args:
-        SERVICE_NAME: user-service
-        SERVICE_PATH: user-service
-        ARTIFACT_NAME: user-service-1.0.jar
+      args:
+        SERVICE_NAME: user_service
+        SERVICE_PATH: user_service
+        ARTIFACT_NAME: user_service-1.0.jar
         MODULE_PORT: 8082
-   container_name: user-service
-   env_file:
-      - ./user-service/src/main/resources/.env
+    container_name: user-service
+    env_file:
+      - ./user_service/src/main/resources/.env
     environment:
-      SPRING_CLOUD_CONSUL_HOST: consul
-      SERVER_PORT: 8082
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/user_service_db
-      SPRING_DATASOURCE_USERNAME: user_dev
-      SPRING_DATASOURCE_PASSWORD: dev_pass
+        SPRING_CLOUD_CONSUL_HOST: consul
+        SERVER_PORT: 8082
+        SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/user_service_db
+        SPRING_DATASOURCE_USERNAME: user_service_admin
+        SPRING_DATASOURCE_PASSWORD: user123
     ports:
       - "8082:8082"
     depends_on:
       - consul
       - postgres
-    networks: [vavilon-net]
+    networks: [ vavilon-net ]
 
   # -------------------- Auth Service --------------------
   auth-service:
     build:
       context: .
-        dockerfile: Dockerfile.template
+      dockerfile: Dockerfile.template
       args:
-        SERVICE_NAME: auth-service
-        SERVICE_PATH: auth-service
-        ARTIFACT_NAME: auth-service-1.0.jar
+        SERVICE_NAME: auth_service
+        SERVICE_PATH: auth_service
+        ARTIFACT_NAME: auth_service-1.0.jar
         MODULE_PORT: 8083
     container_name: auth-service
     env_file:
-      - ./auth-service/src/main/resources/.env
-      environment:
+      - ./auth_service/src/main/resources/.env
+    environment:
         SPRING_CLOUD_CONSUL_HOST: consul
         SERVER_PORT: 8082
         SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auth_service_db
-        SPRING_DATASOURCE_USERNAME: user_dev
-        SPRING_DATASOURCE_PASSWORD: dev_pass
-      ports:
-        - "8083:8083"
-      depends_on:
-        - consul
-        - postgres
-      networks: [vavilon-net]
+        SPRING_DATASOURCE_USERNAME: auth_service_admin
+        SPRING_DATASOURCE_PASSWORD: user123
+    ports:
+      - "8083:8083"
+    depends_on:
+      - consul
+      - postgres
+    networks: [ vavilon-net ]
 
   # -------------------- Notification Service --------------------
   notification-service:
@@ -192,7 +193,7 @@ services:
     depends_on:
       - consul
       - kafka
-    networks: [vavilon-net]
+    networks: [ vavilon-net ]
 
 volumes:
   pgdata:
