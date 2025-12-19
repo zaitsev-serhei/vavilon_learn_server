@@ -97,7 +97,7 @@
 		<dependency>
 			<groupId>com.language_practice_server.server_demo</groupId>
 			<artifactId>contracts</artifactId>
-			<version>1.0</version>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.janino</groupId>
