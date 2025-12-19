@@ -11,3 +11,14 @@ CREATE TABLE oauth2_authorized_client (
     refresh_token_issued_at TIMESTAMP,
     CONSTRAINT oauth2_authorized_client_pkey PRIMARY KEY (id)
 );
+CREATE TABLE refresh_tokens(
+    id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    token_hash VARCHAR(255),
+    issued_at TIMESTAMP NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    provider VARCHAR(200),
+    provider_token_hash VARCHAR(255),
+    revoked BOOLEAN DEFAULT FALSE,
+    CONSTRAINT refresh_token_pkey PRIMARY KEY (id)
+);

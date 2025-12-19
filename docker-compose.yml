@@ -107,9 +107,9 @@ services:
       SPRING_CLOUD_CONSUL_HOST: consul
       SPRING_PROFILES_ACTIVE: dev
       SERVER_PORT: 8081
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/vavilon_learn_dev
-      SPRING_DATASOURCE_USERNAME: user_dev
-      SPRING_DATASOURCE_PASSWORD: dev_pass
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/task_service_db
+      SPRING_DATASOURCE_USERNAME: task_service_admin
+      SPRING_DATASOURCE_PASSWORD: user123
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     ports:
       - "8081:8081"
@@ -125,19 +125,19 @@ services:
       context: .
       dockerfile: Dockerfile.template
       args:
-        SERVICE_NAME: user-service
-        SERVICE_PATH: user-service
-        ARTIFACT_NAME: user-service-1.0.jar
+        SERVICE_NAME: user_service
+        SERVICE_PATH: user_service
+        ARTIFACT_NAME: user_service-1.0.jar
         MODULE_PORT: 8082
     container_name: user-service
     env_file:
-      - ./user-service/src/main/resources/.env
+      - ./user_service/src/main/resources/.env
     environment:
         SPRING_CLOUD_CONSUL_HOST: consul
         SERVER_PORT: 8082
         SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/user_service_db
-        SPRING_DATASOURCE_USERNAME: user_dev
-        SPRING_DATASOURCE_PASSWORD: dev_pass
+        SPRING_DATASOURCE_USERNAME: user_service_admin
+        SPRING_DATASOURCE_PASSWORD: user123
     ports:
       - "8082:8082"
     depends_on:
@@ -151,19 +151,19 @@ services:
       context: .
       dockerfile: Dockerfile.template
       args:
-        SERVICE_NAME: auth-service
-        SERVICE_PATH: auth-service
-        ARTIFACT_NAME: auth-service-1.0.jar
+        SERVICE_NAME: auth_service
+        SERVICE_PATH: auth_service
+        ARTIFACT_NAME: auth_service-1.0.jar
         MODULE_PORT: 8083
     container_name: auth-service
     env_file:
-      - ./auth-service/src/main/resources/.env
+      - ./auth_service/src/main/resources/.env
     environment:
         SPRING_CLOUD_CONSUL_HOST: consul
         SERVER_PORT: 8082
         SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auth_service_db
-        SPRING_DATASOURCE_USERNAME: user_dev
-        SPRING_DATASOURCE_PASSWORD: dev_pass
+        SPRING_DATASOURCE_USERNAME: auth_service_admin
+        SPRING_DATASOURCE_PASSWORD: user123
     ports:
       - "8083:8083"
     depends_on:
