@@ -29,17 +29,12 @@ public class WebSecurityConfig {
     private String jwkUrl;
 
     @Bean
-    public ReactiveJwtDecoder jwtDecoder() {
-        logger.debug("Creating Nimbus decoder for JWKS set {}", jwkUrl);
-        return NimbusReactiveJwtDecoder.withJwkSetUri(jwkUrl).build();
-    }
-
-    @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http.authorizeExchange(
                 ex -> ex
                         .pathMatchers("/.well-known/**", "/actuator/**")
                         .permitAll()
+                        .pathMatchers("/oauth2/** , /api/oauth2/**").permitAll()
                         .pathMatchers("/api/**").hasAuthority("SCOPE_USER")
                         .pathMatchers("/internal/**").hasAuthority("SCOPE_internal")
                         .anyExchange().authenticated()

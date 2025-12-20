@@ -40,9 +40,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+        String path = request.getServletPath(); // Better than getRequestURI() for matching
+        // 1. Skip logic for ALL public paths
+        if (path.startsWith("/actuator") ||
+                path.startsWith("/swagger-ui") ||
+                path.startsWith("/v3/api-docs") ||
+                path.equals("/favicon.ico") ||
+                path.equals("/error")) { // CRITICAL: Allow /error
+            filterChain.doFilter(request, response);
+            return;
+        }
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            logger.error("Request header is missing per request: {}", request.getPathInfo());
+            logger.debug("Request header is missing per request: {}", request.getPathInfo());
             filterChain.doFilter(request, response);
             return;
         }

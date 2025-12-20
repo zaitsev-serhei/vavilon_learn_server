@@ -17,7 +17,7 @@ public class OAuth2InitiateController {
     @Value("${app.frontend.default-success-redirect}")
     private String defaultFrontendCallback;
 
-    @GetMapping("/api/oauth2/authorize/google")
+    @GetMapping("/oauth2/authorize/google")
     public void authorizeGoogle(
             @RequestParam(value = "redirectUrl", required = false) String redirectUrl,
             @RequestParam(value = "error", required = false) String error,
