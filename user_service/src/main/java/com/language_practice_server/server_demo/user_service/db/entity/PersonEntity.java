@@ -1,18 +1,15 @@
 package com.language_practice_server.server_demo.user_service.db.entity;
 
 import com.language_practice_server.server_demo.user_service.audit.BaseAuditableEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
 @Table(name = "persons")
 public class PersonEntity extends BaseAuditableEntity {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "first_name")
     private String firstName;

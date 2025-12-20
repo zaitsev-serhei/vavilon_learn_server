@@ -19,6 +19,7 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.server.WebFilter;
+
 import java.util.Map;
 
 @Configuration
@@ -31,14 +32,18 @@ public class WebSecurityConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http.authorizeExchange(
-                ex -> ex
-                        .pathMatchers("/.well-known/**", "/actuator/**")
-                        .permitAll()
-                        .pathMatchers("/oauth2/** , /api/oauth2/**").permitAll()
-                        .pathMatchers("/api/**").hasAuthority("SCOPE_USER")
-                        .pathMatchers("/internal/**").hasAuthority("SCOPE_internal")
-                        .anyExchange().authenticated()
-        )
+                        ex -> ex
+                                .pathMatchers(
+                                        "/oauth2/**",
+                                        " /api/oauth2/**",
+                                        "login/oauth2/**",
+                                        "/.well-known/**",
+                                        "/actuator/**")
+                                .permitAll()
+                                .pathMatchers("/api/**").hasAuthority("SCOPE_USER")
+                                .pathMatchers("/internal/**").hasAuthority("SCOPE_internal")
+                                .anyExchange().denyAll()
+                )
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .oauth2ResourceServer(spec -> spec.jwt(Customizer.withDefaults()));
         return http.build();

@@ -45,6 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (path.startsWith("/actuator") ||
                 path.startsWith("/swagger-ui") ||
                 path.startsWith("/v3/api-docs") ||
+                path.startsWith("/oauth2") ||
                 path.equals("/favicon.ico") ||
                 path.equals("/error")) { // CRITICAL: Allow /error
             filterChain.doFilter(request, response);

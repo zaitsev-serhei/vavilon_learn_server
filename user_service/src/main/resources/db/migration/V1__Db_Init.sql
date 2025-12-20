@@ -1,4 +1,3 @@
-CREATE SEQUENCE persons_seq START WITH 1 INCREMENT BY 1;
 CREATE TABLE persons (
     id                 BIGSERIAL PRIMARY KEY,
     first_name         VARCHAR(100),
@@ -6,13 +5,11 @@ CREATE TABLE persons (
     birth_date         DATE,
     country            VARCHAR(100),
     city               VARCHAR(100),
-
     created_by         BIGINT,
     created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
     last_modified_by   BIGINT,
     last_modified_at   TIMESTAMPTZ
 );
-CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1;
 CREATE TABLE users (
     id                     BIGSERIAL PRIMARY KEY,
     user_name              VARCHAR(150) NOT NULL,
@@ -23,9 +20,7 @@ CREATE TABLE users (
     locked                 BOOLEAN NOT NULL DEFAULT false,
     credentials_expired    BOOLEAN NOT NULL DEFAULT false,
     last_login_date        TIMESTAMPTZ,
-
     person_id              BIGINT,
-
     created_by             BIGINT,
     created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
     last_modified_by       BIGINT,
