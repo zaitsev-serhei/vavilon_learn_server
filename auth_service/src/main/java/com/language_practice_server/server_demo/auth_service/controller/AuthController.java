@@ -27,7 +27,7 @@ import org.springframework.web.util.WebUtils;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
     private final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final JwtTokenProvider jwtTokenProvider;

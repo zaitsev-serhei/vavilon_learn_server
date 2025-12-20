@@ -5,7 +5,6 @@ CREATE TABLE persons (
     birth_date         DATE,
     country            VARCHAR(100),
     city               VARCHAR(100),
-
     created_by         BIGINT,
     created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
     last_modified_by   BIGINT,
@@ -21,9 +20,7 @@ CREATE TABLE users (
     locked                 BOOLEAN NOT NULL DEFAULT false,
     credentials_expired    BOOLEAN NOT NULL DEFAULT false,
     last_login_date        TIMESTAMPTZ,
-
     person_id              BIGINT,
-
     created_by             BIGINT,
     created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
     last_modified_by       BIGINT,

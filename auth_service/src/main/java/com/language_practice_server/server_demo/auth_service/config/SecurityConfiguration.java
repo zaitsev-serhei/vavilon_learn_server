@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -57,11 +58,17 @@ public class SecurityConfiguration {
                         (requests) -> requests
                                 .requestMatchers(HttpMethod.GET,
                                         "/v3/api-docs/**",
+                                        "/v3/api-docs.yaml",
                                         "/swagger-ui/**",
                                         "/swagger-ui.html",
                                         "/swagger-resources/**",
                                         "/webjars/**",
-                                        "/favicon.ico").permitAll()
+                                        "/favicon.ico",
+                                        "/error",
+                                        "/actuator/**"
+                                ).permitAll()
+                                .requestMatchers("/actuator/**").permitAll()
+                                .requestMatchers("/error").permitAll()
                                 .requestMatchers(
                                         "/api/oauth2/**",
                                         "/api/auth/**",
