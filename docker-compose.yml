@@ -52,8 +52,8 @@ services:
   # -------------------- Config Service --------------------
   config-service:
     build:
-      context: ..
-      dockerfile: Dockerfile.template
+      context: .
+      dockerfile: ./back_end/Dockerfile.template
       args:
         SERVICE_NAME: config_service
         SERVICE_PATH: config_service
@@ -72,8 +72,8 @@ services:
   # -------------------- API Gateway --------------------
   api-gateway:
     build:
-      context: ..
-      dockerfile: Dockerfile.template
+      context: .
+      dockerfile: ./back_end/Dockerfile.template
       args:
         SERVICE_NAME: api_gateway_service
         SERVICE_PATH: api_gateway_service
@@ -93,8 +93,8 @@ services:
   # -------------------- Main Service --------------------
   main-service:
     build:
-      context: ..
-      dockerfile: Dockerfile.template
+      context: .
+      dockerfile: ./back_end/Dockerfile.template
       args:
         SERVICE_NAME: main_service_old
         SERVICE_PATH: main_service_old
@@ -102,7 +102,7 @@ services:
         MODULE_PORT: 8081
     container_name: main-service
     env_file:
-      - ../main_service_old/src/main/resources/.env
+      - ./back_end/main_service_old/src/main/resources/.env
     environment:
       SPRING_CLOUD_CONSUL_HOST: consul
       SPRING_PROFILES_ACTIVE: dev
@@ -122,8 +122,8 @@ services:
   # -------------------- User Service --------------------
   user-service:
     build:
-      context: ..
-      dockerfile: Dockerfile.template
+      context: .
+      dockerfile: ./back_end//Dockerfile.template
       args:
         SERVICE_NAME: user_service
         SERVICE_PATH: user_service
@@ -131,7 +131,7 @@ services:
         MODULE_PORT: 8082
     container_name: user-service
     env_file:
-      - ../user_service/src/main/resources/.env
+      - ./back_end/user_service/src/main/resources/.env
     environment:
       SPRING_CLOUD_CONSUL_HOST: consul
       SERVER_PORT: 8082
@@ -148,8 +148,8 @@ services:
   # -------------------- Auth Service --------------------
   auth-service:
     build:
-      context: ..
-      dockerfile: Dockerfile.template
+      context: .
+      dockerfile: ./back_end/Dockerfile.template
       args:
         SERVICE_NAME: auth_service
         SERVICE_PATH: auth_service
@@ -157,10 +157,10 @@ services:
         MODULE_PORT: 8083
     container_name: auth-service
     env_file:
-      - auth_service/src/main/resources/.env
+      - ./back_end/auth_service/src/main/resources/.env
     environment:
       SPRING_CLOUD_CONSUL_HOST: consul
-      SERVER_PORT: 8082
+      SERVER_PORT: 8083
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auth_service_db
       SPRING_DATASOURCE_USERNAME: auth_service_admin
       SPRING_DATASOURCE_PASSWORD: user123
@@ -174,8 +174,8 @@ services:
   # -------------------- Notification Service --------------------
   notification-service:
     build:
-      context: ..
-      dockerfile: Dockerfile.template
+      context: .
+      dockerfile: ./back_end/Dockerfile.template
       args:
         SERVICE_NAME: notification_service
         SERVICE_PATH: notification_service
@@ -183,7 +183,7 @@ services:
         MODULE_PORT: 8075
     container_name: notification-service
     env_file:
-      - ../notification_service/src/main/resources/.env
+      - ./back_end/notification_service/src/main/resources/.env
     environment:
       SERVER_PORT: 8075
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
@@ -198,10 +198,10 @@ services:
     # -------------------- Frontend --------------------
   frontend:
     build:
-      context: ../frontend/vavilon_learn/
-      dockerfile: Dockerfile.template
-    container_name: frontend
-      ports:
+      context: ./front_end/vavilon_learn
+      dockerfile: ./Dockerfile.template
+    container_name: frontend-service
+    ports:
       - "5173:80"
     depends_on:
       - api-gateway

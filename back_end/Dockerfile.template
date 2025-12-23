@@ -7,7 +7,7 @@ ARG SERVICE_PATH
 ARG MODULE_PORT
 
 # Copy all source code into the workspace
-COPY . .
+COPY ./back_end .
 
 # First, run a clean install across the whole project.
 # Maven handles module dependencies (like 'contracts') automatically in a single workspace.

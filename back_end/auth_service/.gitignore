@@ -33,5 +33,6 @@ build/
 ### VS Code ###
 .vscode/
 /src/main/resources/.env
+/src/main/resources/sercret_dev/**
 .env
 *.env
