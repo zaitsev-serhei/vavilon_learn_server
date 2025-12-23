@@ -46,7 +46,7 @@ The Swagger UI allows you to explore REST endpoints, view request/response model
 - **config** — Spring Boot configurations:
   - JPA Auditing, Kafka.
 
-### Project Structure
+### Project Structure (to be updated regarding the changes in project structure with front-end integration)
 language_practice_server/</br>
 ├── src/main/java/com/language_practice_server/</br>
 │ ├── server_demo/</br>
