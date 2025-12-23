@@ -3,6 +3,7 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+!**/src/main/resources/application-dev.properties
 
 ### STS ###
 .apt_generated
@@ -31,6 +32,7 @@ build/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/.env
+/src/main/resources/sercret_dev/**
 .env
 *.env
-/back_end/auth_service/src/main/resources/secret_dev/**

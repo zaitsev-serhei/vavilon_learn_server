@@ -1,0 +1,35 @@
+# Stage 1: Build
+FROM maven:3.9.4-eclipse-temurin-17 AS builder
+WORKDIR /workspace
+
+# Define ARGs that will be passed from docker-compose
+ARG SERVICE_PATH
+ARG MODULE_PORT
+
+# Copy all source code into the workspace
+COPY ./back_end .
+
+# First, run a clean install across the whole project.
+# Maven handles module dependencies (like 'contracts') automatically in a single workspace.
+RUN mvn -B -DskipTests clean install
+RUN echo "Packaging specific service: $SERVICE_PATH" && \
+    mvn -B -DskipTests -pl $SERVICE_PATH package
+
+# Stage 2: Runtime
+FROM eclipse-temurin:17-jre-jammy
+WORKDIR /app
+
+ARG SERVICE_PATH
+ARG MODULE_PORT
+ARG ARTIFACT_NAME
+
+# Note the updated source paths: /workspace/SERVICE_PATH/target/extracted/LAYER_NAME/
+RUN echo "Stage 2 copying artifact ${ARTIFACT_NAME}"
+COPY --from=builder /workspace/${SERVICE_PATH}/target/${ARTIFACT_NAME} app.jar
+
+# Set environment variables and expose port
+ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Duser.timezone=UTC"
+EXPOSE ${MODULE_PORT}
+
+# Define the entrypoint using the specific JarLauncher for layered approach
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar /app/app.jar"]
